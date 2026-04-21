@@ -1,0 +1,255 @@
+You are building a full-featured Cognitive Learning Pattern Analyzer web application 
+called "AIntelliLearn" — an AI-powered adaptive learning dashboard. Build this as a 
+single React + Tailwind CSS application with recharts for data visualization and the 
+Anthropic Claude API for AI-powered insights.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TECH STACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- React (functional components + hooks)
+- Tailwind CSS for styling
+- Recharts for all graphs/charts
+- Claude API (claude-sonnet-4-6) for AI insight generation
+- lucide-react for icons
+- No router needed — use tab/view state
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESIGN SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Dark theme only. Color palette:
+  - Background:   #080c14
+  - Surface:      #0d1420
+  - Card:         #111827
+  - Border:       #1e2d45
+  - Accent Blue:  #00d4ff
+  - Accent Purple:#7c3aed
+  - Accent Green: #10b981
+  - Accent Amber: #f59e0b
+  - Text:         #e2e8f0
+  - Muted:        #64748b
+  - Danger:       #ef4444
+
+Typography: Use "Space Grotesk" for headings, "Inter" for body (import from Google Fonts).
+All cards have: rounded-xl border border-[#1e2d45] bg-[#111827] p-5
+Glowing accents: use box-shadow with the accent colors at low opacity for active states.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+APP STRUCTURE — 5 MAIN VIEWS (sidebar nav)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DASHBOARD (home)
+2. LEARNING PATTERNS
+3. TOPIC MASTERY
+4. AI INSIGHTS
+5. STUDY SESSION (live tracker)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SIDEBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Fixed left sidebar, width 240px
+- App logo + name "AIntelliLearn" at top with a brain icon
+- Nav items with icons: Dashboard, Patterns, Mastery, AI Insights, Study Session
+- Active item has accent blue left border + blue text glow
+- Bottom: user avatar, name, XP badge (e.g. "Level 7 Learner")
+- Streak counter: "🔥 14 Day Streak"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIEW 1: DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Top row — 4 stat cards:
+  - Overall Mastery Score: 78% (with trend arrow +4% this week)
+  - Study Streak: 14 days 🔥
+  - Topics Active: 6
+  - AI Insights Generated: 12
+
+Second row:
+  LEFT (60%): Weekly Performance Line Chart (recharts LineChart)
+    - X-axis: Mon–Sun
+    - 3 lines: Score, Focus, Retention
+    - Each line a different accent color with dots
+    - Custom tooltip showing all 3 values
+
+  RIGHT (40%): Cognitive Style Radar Chart (recharts RadarChart)
+    - 6 axes: Visual, Auditory, Kinesthetic, Reading, Analytical, Creative
+    - Filled polygon with accent blue, 30% opacity fill
+    - Show values at each axis point
+
+Third row — Recent Activity Feed:
+  - List of last 5 learning actions (quiz completed, flashcard review, etc.)
+  - Each row: timestamp | action type badge | topic | score if applicable | XP earned
+  - Action type badges colored by type (Quiz=blue, Flashcard=green, Test=purple)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIEW 2: LEARNING PATTERNS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Top section — Forgetting Curve Chart (AreaChart):
+  - X-axis: Day 1, 2, 4, 7, 14, 21, 30
+  - Y-axis: Retention %
+  - Two areas: Natural Decay (red/danger) vs With Spaced Review (green)
+  - Annotate the crossover point
+  - Add a "Schedule Review" button that opens a modal to pick a topic + review date
+
+Middle section — Session Heatmap:
+  - Build a 7×24 grid (days × hours) using divs
+  - Each cell colored by intensity: no activity=border color, low=dim accent, high=bright accent
+  - Hover tooltip showing "Tuesday 10am — 3 sessions, avg score 84"
+  - Title: "Your Cognitive Heatmap — Peak hours highlighted"
+
+Bottom section — Learning Style Breakdown:
+  - Horizontal bar chart for: Visual, Auditory, Kinesthetic, Reading, Analytical, Creative
+  - Each bar a gradient from accent color to transparent
+  - Label shows % and a one-line description (e.g. "Visual 88% — You learn best with diagrams")
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIEW 3: TOPIC MASTERY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Top: Filter bar — "All Topics" + individual topic chips (clickable to filter)
+
+Main: Grid of Topic Cards (3 per row on desktop, 2 on tablet):
+  Each card contains:
+    - Topic name + icon (emoji)
+    - Circular progress ring showing mastery % (SVG or CSS)
+    - Color-coded: <60% red, 60-79% amber, 80%+ green
+    - "Sessions: 12" | "Last studied: 2d ago"
+    - Spaced repetition indicator: next review badge ("Review due!" or "Next: in 3 days")
+    - Mini sparkline (last 7 sessions performance)
+    - Two buttons: "Study Now" (accent) | "View Details" (ghost)
+
+Detail modal (when "View Details" clicked):
+  - Full topic performance history as LineChart
+  - Knowledge gap analysis (what subtopics are weakest)
+  - AI-generated study recommendation (call Claude API)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIEW 4: AI INSIGHTS (Claude-powered)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This view uses the Claude API to generate real insights.
+
+Top: "Generate Insights" button — clicking this calls the Claude API with the 
+learner's mock data payload and streams the response.
+
+API call structure:
+  - Model: claude-sonnet-4-6
+  - System prompt: "You are an expert learning coach and cognitive scientist analyzing 
+    a student's learning data. Generate specific, actionable insights about their 
+    learning patterns, cognitive style, retention gaps, and optimization recommendations. 
+    Format your response as JSON with an array of insight objects, each having: 
+    type (Pattern|Alert|Trend|Recommendation), title, body, priority (high|medium|low), 
+    and actionItems array."
+  - User message: Pass the mock learner data as JSON
+
+Display insights as cards:
+  - Icon based on type (🧠 Pattern, ⚡ Alert, 📈 Trend, 🎯 Recommendation)
+  - Priority badge (high=red, medium=amber, low=green)
+  - Title + body text
+  - Expandable "Action Items" list
+  - Dismiss button, "Implement" button
+
+Also include a free-form AI Chat section at the bottom:
+  - Input: "Ask your AI learning coach anything..."
+  - Sends to Claude API with learner context in system prompt
+  - Renders responses in a chat bubble UI (user right, AI left)
+  - Show typing indicator while streaming
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIEW 5: STUDY SESSION (Live Tracker)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This is an interactive live study session tracker.
+
+Top: Session Setup Panel
+  - Topic selector (dropdown with mock topics)
+  - Session goal input (e.g. "Complete Chapter 4")
+  - Difficulty selector: Easy / Medium / Hard
+  - "Start Session" button
+
+Active Session State (shown after Start clicked):
+  - Large countdown/count-up timer (HH:MM:SS)
+  - Pause / Resume / End buttons
+  - Focus score meter: animated bar that fluctuates (simulate with setInterval)
+  - Live "Focus Events" log: timestamped entries like "Deep focus at 12:34", "Distraction detected at 12:41"
+
+During session — Question/Quiz widget:
+  - Every 5 minutes (simulate with a 30-second timer for demo), pop a comprehension check
+  - Show a multiple choice question related to the topic
+  - On answer: show correct/incorrect + explanation
+  - Track running score
+
+Post-Session Summary (shown after End):
+  - Total time, average focus score, questions answered, score
+  - Detected learning pattern for this session
+  - XP earned animation (number counts up)
+  - Button: "Get AI Analysis" — calls Claude API to analyze the session stats
+  - Auto-adds to Recent Activity
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MOCK DATA (define at top of file)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Define realistic mock data for:
+  - weeklyPerformance: [{day, score, focus, retention}] — 7 days
+  - cognitiveProfile: [{trait, value}] — 6 traits
+  - topicMastery: [{topic, emoji, mastery, sessions, lastStudied, nextReview, sparkline[]}] — 8 topics
+  - retentionCurve: [{day, natural, withReview}] — 7 points
+  - heatmapData: 7×24 matrix with intensity values 0–5
+  - recentActivity: [{time, action, topic, score, xp}] — 10 items
+  - learnerProfile: {name, level, xp, totalXp, streak, joinDate}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANIMATIONS & POLISH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Page transitions: fade-in on view change (CSS transition opacity + translateY)
+- Stat cards: numbers count up from 0 on first render (useEffect + setInterval)
+- Circular progress rings: animate stroke-dashoffset on mount
+- Insight cards: staggered slide-in from bottom (animation-delay per card)
+- Focus meter in study session: smooth animated width transitions
+- XP bar in sidebar: animated fill on load
+- Hover on all interactive elements: subtle glow with box-shadow accent color
+- Loading state for Claude API calls: show animated skeleton cards
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RESPONSIVE LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Desktop (>1024px): full sidebar + main content
+- Tablet (768–1024px): collapsible sidebar (icon-only mode)
+- Mobile (<768px): bottom navigation bar instead of sidebar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPONENT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Build these as separate named components within the same file:
+  <App />                  — root, manages active view state
+  <Sidebar />              — navigation
+  <Dashboard />            — view 1
+  <LearningPatterns />     — view 2
+  <TopicMastery />         — view 3
+  <AIInsights />           — view 4 (Claude API calls)
+  <StudySession />         — view 5
+  <StatCard />             — reusable metric card
+  <TopicCard />            — mastery topic card
+  <InsightCard />          — AI insight card
+  <CircularProgress />     — SVG ring progress component
+  <HeatmapGrid />          — session heatmap
+  <ChatBubble />           — AI chat message
+  <Modal />                — reusable modal wrapper
+  <SkeletonLoader />       — loading placeholder
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CLAUDE API INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Use fetch() to call https://api.anthropic.com/v1/messages
+Headers: { "Content-Type": "application/json" }
+Model: "claude-sonnet-4-6"
+max_tokens: 1000
+
+Create a reusable async function:
+  async function callClaude(systemPrompt, userMessage) { ... }
+
+Handle loading states, errors, and timeouts gracefully.
+Show a friendly error card if the API fails.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Deliver this as a single .jsx file with all components, data, and styles inline.
+Import only from: react, recharts, lucide-react.
+No external CSS files. Use Tailwind utility classes throughout.
+The app should be fully functional and visually impressive on first load.

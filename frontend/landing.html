@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIntelliLearn — Adaptive Learning Reimagined</title>
+    <meta name="description" content="AIntelliLearn: The AI-powered adaptive learning platform that evolves with you.">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&family=DM+Sans:wght@400;500&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fb;
+            --text: #202124;
+            --text-muted: #5f6368;
+            --accent: #1a73e8;
+            --accent-hover: #185abc;
+            --accent-green: #10b981;
+            --accent-purple: #7c3aed;
+            --accent-amber: #f59e0b;
+            --border: rgba(0, 0, 0, 0.08);
+            --overlay: rgba(255, 255, 255, 0.85);
+
+            --heading-font: 'Plus Jakarta Sans', sans-serif;
+            --body-font: 'DM Sans', sans-serif;
+            --mono-font: 'JetBrains Mono', monospace;
+
+            --radius-sm: 4px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --radius-xl: 36px;
+            --radius-pill: 9999px;
+
+            --max-width: 1280px;
+            --page-margin: clamp(24px, 5vw, 96px);
+
+            --header-h: 64px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--body-font);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--heading-font);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--page-margin);
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-h);
+            background: var(--overlay);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--heading-font);
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text);
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            color: var(--accent);
+        }
+
+        .nav-center {
+            display: none;
+            gap: 24px;
+        }
+
+        @media (min-width: 1024px) {
+            .nav-center {
+                display: flex;
+            }
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-signin {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: var(--radius-pill);
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            position: relative;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            padding-top: var(--header-h);
+        }
+
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border-radius: var(--radius-pill);
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 16px;
+            min-height: 1.2em;
+        }
+
+        .hero p.subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            opacity: 0;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            opacity: 0;
+        }
+
+        /* --- TYPING --- */
+        .typing span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.1s ease;
+        }
+
+        .typing span.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--accent);
+            margin-left: 2px;
+            animation: blink 0.5s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            padding: 96px 0;
+            position: relative;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            margin-bottom: 64px;
+            max-width: 700px;
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 700;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 16px;
+        }
+
+        /* --- DEMO SECTION --- */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .demo-grid {
+                grid-template-columns: 4fr 6fr;
+            }
+        }
+
+        .demo-visual {
+            position: relative;
+            background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+            border-radius: var(--radius-xl);
+            aspect-ratio: 16/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .mock-ui {
+            background: #111827;
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
+            font-family: var(--body-font);
+        }
+
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+
+        .mock-progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mock-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--accent);
+            width: 0;
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mock-pills {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .mock-pill {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .mock-chat {
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px 12px 12px 0;
+            font-size: 13px;
+            max-width: 80%;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .custom-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cursor-pill {
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- ICON ROW --- */
+        .icon-row-container {
+            padding: 64px 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .icon-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 64px;
+            padding: 0 40px;
+        }
+
+        .icon-badge {
+            width: 98px;
+            height: 98px;
+            min-width: 98px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(183, 191, 217, 0.09);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .icon-badge svg {
+            width: 40px;
+            height: 40px;
+            color: var(--text-muted);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        .mission-text {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        /* --- FEATURES --- */
+        .feature-block {
+            padding: 120px 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .feature-block {
+                grid-template-columns: 1fr 1.5fr;
+            }
+
+            .feature-block.alt {
+                grid-template-columns: 1.5fr 1fr;
+            }
+
+            .feature-block.alt .feature-text {
+                grid-column: 2;
+            }
+
+            .feature-block.alt .feature-visual {
+                grid-column: 1;
+                grid-row: 1;
+            }
+        }
+
+        .feature-text h3 {
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .feature-visual {
+            height: 480px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* Visual 1: Difficulty Meter */
+        .visual-1 {
+            background: linear-gradient(to bottom, #e8f0fe, #c5dbff);
+        }
+
+        .difficulty-card {
+            background: #fff;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .meter-track {
+            height: 12px;
+            background: #eee;
+            border-radius: 6px;
+            margin: 24px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            position: absolute;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 6px;
+        }
+
+        /* Visual 2: Retention Chart */
+        .visual-2 {
+            background: linear-gradient(to bottom, #f0fdf4, #bbf7d0);
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- SLIDER --- */
+        .slider-section {
+            background: var(--surface);
+            padding: 128px 0;
+        }
+
+        .slider-viewport {
+            position: relative;
+            margin-top: 64px;
+            overflow: visible;
+        }
+
+        .slider-track {
+            display: flex;
+            gap: 24px;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide {
+            min-width: 80%;
+            aspect-ratio: 16/9;
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+            background: #ccc;
+            cursor: none;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+            color: #fff;
+        }
+
+        .slide-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .ctrl-btn {
+            width: 64px;
+            height: 48px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            background: var(--surface);
+            transform: scale(1.05);
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* --- PRICING --- */
+        .split-pricing {
+            display: grid;
+            grid-template-columns: 1fr;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (min-width: 1024px) {
+            .split-pricing {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .price-half {
+            padding: 96px var(--page-margin);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid var(--border);
+        }
+
+        .price-half:last-child {
+            border-right: none;
+        }
+
+        .price-half h3 {
+            font-size: 40px;
+            margin-bottom: 24px;
+        }
+
+        .price-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-box {
+            background: #121317;
+            border-radius: var(--radius-xl);
+            padding: 100px 80px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            margin: 0 var(--page-margin);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+        }
+
+        .cta-box h2 {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .cta-box p {
+            color: #aaa;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+
+        /* --- FOOTER --- */
+        .footer-logo-svg {
+            width: 100%;
+            height: auto;
+            margin: 64px 0;
+            fill: #121317;
+            opacity: 0.05;
+        }
+
+        footer {
+            padding: 64px 0 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 64px;
+            margin-bottom: 64px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-col h4 {
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- COOKIES --- */
+        #cookie-banner {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #fff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-md);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            z-index: 1100;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #cookie-banner.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="custom-cursor" id="cursor">
+        <div class="cursor-pill" id="cursor-text">▶ Play Demo</div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">
+                <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12,2C6.477,2,2,6.477,2,12s4.477,10,10,10s10-4.477,10-10S17.523,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8s8,3.589,8,8 S16.411,20,12,20z M11,7h2v6h-2V7z M11,15h2v2h-2V15z" />
+                </svg>
+                AIntelliLearn
+            </a>
+            <nav class="nav-center">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#" class="nav-link">Use Cases ▾</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#" class="nav-link">Resources ▾</a>
+            </nav>
+            <div class="nav-right">
+                <a href="#" class="btn-signin">Sign In</a>
+                <a href="#" class="btn-primary">Get Started Free</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <canvas class="hero-canvas" id="hero-canvas"></canvas>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span style="font-size: 14px; font-weight: 700;">Beta</span>
+                <span style="font-size: 14px; color: var(--text-muted);">AIntelliLearn is now public</span>
+            </div>
+            <h1 id="hero-title" class="typing"></h1>
+            <p class="subtitle" id="hero-sub">The AI-powered learning platform that adapts to you.</p>
+            <div class="hero-btns" id="hero-btns">
+                <a href="#" class="btn-primary" style="padding: 14px 32px; font-size: 16px;">Start Learning Free</a>
+                <a href="#" class="btn-signin"
+                    style="padding: 14px 32px; font-size: 16px; border: 1px solid var(--border); border-radius: var(--radius-pill); background: #fff;">Explore
+                    Features</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="container">
+        <div class="demo-grid">
+            <div class="reveal">
+                <span class="eyebrow">See It In Action</span>
+                <h2>Watch how AIntelliLearn adapts to your learning style</h2>
+                <p style="color: var(--text-muted); margin-bottom: 32px;">Our AI analyzes your pace, patterns, and
+                    preferences in real time to serve content exactly when and how you need it.</p>
+            </div>
+            <div class="demo-visual reveal" id="demo-visual">
+                <div class="mock-ui">
+                    <div class="mock-header">
+                        <span style="font-weight: 700; font-size: 14px;">Your Learning Session</span>
+                        <div style="display: flex; gap: 4px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: #ff5f57;"></div>
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: #ffbd2e;"></div>
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: #28c940;"></div>
+                        </div>
+                    </div>
+                    <div class="mock-progress">
+                        <div class="mock-progress-fill" id="demo-progress"></div>
+                    </div>
+                    <div class="mock-pills">
+                        <div class="mock-pill">Algebra ✓</div>
+                        <div class="mock-pill" style="border-color: var(--accent); color: #fff;">Physics →</div>
+                        <div class="mock-pill">Chemistry ○</div>
+                    </div>
+                    <div class="mock-chat">
+                        Great work! You've mastered conceptual foundations. Let's try this applied problem next to push
+                        your analytical skills.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="icon-row-container">
+        <div class="icon-row" id="icon-row">
+            <!-- Icons injected by JS -->
+        </div>
+        <div class="container">
+            <h2 class="mission-text reveal" id="mission-text"></h2>
+        </div>
+    </div>
+
+    <section id="features" class="container">
+        <div class="feature-block reveal">
+            <div class="feature-text">
+                <h3>Adaptive Learning Engine</h3>
+                <p style="color: var(--text-muted);">Our AI tracks your cognitive patterns, adjusting difficulty,
+                    pacing, and content type in real time. No two learning journeys are alike.</p>
+            </div>
+            <div class="feature-visual visual-1">
+                <div class="difficulty-card">
+                    <span class="eyebrow" style="margin-bottom: 8px;">Difficulty Level</span>
+                    <h4 id="diff-label">Advanced</h4>
+                    <div class="meter-track">
+                        <div class="meter-fill" id="meter-fill"></div>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-muted);">Optimizing for high-performance retention</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-block alt reveal">
+            <div class="feature-text">
+                <h3>Spaced Repetition System</h3>
+                <p style="color: var(--text-muted);">Evidence-based scheduling surfaces concepts at exactly the right
+                    moment before you forget them. Build lasting knowledge, not short-term recall.</p>
+            </div>
+            <div class="feature-visual visual-2">
+                <svg class="chart-svg" viewBox="0 0 400 200">
+                    <path d="M0,180 Q100,180 200,100 T400,20" fill="none" stroke="var(--accent)" stroke-width="3"
+                        stroke-dasharray="1000" stroke-dashoffset="1000" id="forget-path" />
+                    <path d="M0,180 L400,180" stroke="var(--border)" stroke-width="1" />
+                    <circle cx="200" cy="100" r="6" fill="var(--accent)" opacity="0" id="forget-dot">
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="slider-section">
+        <div class="container">
+            <div class="section-header"
+                style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; max-width: none;">
+                <div>
+                    <span class="eyebrow">Use Cases</span>
+                    <h2>Built for every kind of learner</h2>
+                </div>
+                <p style="color: var(--text-muted); max-width: 400px; margin-bottom: 12px;">Whether you're a student,
+                    professional, or lifelong learner, AIntelliLearn meets you where you are.</p>
+            </div>
+
+            <div class="slider-viewport">
+                <div class="slider-track" id="slider-track">
+                    <div class="slide" style="background: linear-gradient(135deg, #1a73e8, #0d47a1);">
+                        <div class="slide-overlay">
+                            <h3>Student</h3>
+                        </div>
+                    </div>
+                    <div class="slide" style="background: linear-gradient(135deg, #10b981, #065f46);">
+                        <div class="slide-overlay">
+                            <h3>Professional</h3>
+                        </div>
+                    </div>
+                    <div class="slide" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
+                        <div class="slide-overlay">
+                            <h3>Lifelong Learner</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; min-height: 80px;">
+                    <p id="slide-copy" style="font-size: 18px; transition: opacity 0.3s ease;">Ace your exams with
+                        AI-powered study plans that adapt to your syllabus and test schedule.</p>
+                    <a href="#" id="slide-link"
+                        style="color: var(--accent); font-weight: 700; margin-top: 12px; display: block;">View student
+                        case →</a>
+                </div>
+
+                <div class="slide-controls">
+                    <button class="ctrl-btn" id="prev-btn" disabled>←</button>
+                    <button class="ctrl-btn" id="next-btn">→</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="split-pricing" id="pricing">
+        <div class="price-half">
+            <canvas class="hero-canvas" id="canvas-left"></canvas>
+            <span class="price-badge">Free Forever</span>
+            <h3>For Students</h3>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Start your journey with core adaptive features.
+            </p>
+            <a href="#" class="btn-primary">Get Started Free</a>
+        </div>
+        <div class="price-half">
+            <canvas class="hero-canvas" id="canvas-right"></canvas>
+            <span class="price-badge" style="background: rgba(16,185,129,0.1); color: var(--accent-green);">Coming
+                Soon</span>
+            <h3>For Organizations</h3>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Level up your team with enterprise intelligence.
+            </p>
+            <a href="#" class="btn-signin"
+                style="border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 10px 32px;">Notify
+                Me</a>
+        </div>
+    </div>
+
+    <section class="container" style="padding: 128px 0;">
+        <div class="cta-box">
+            <canvas class="hero-canvas" id="canvas-cta"></canvas>
+            <div class="cta-content">
+                <h2 id="cta-title" class="typing"></h2>
+                <p>Join 50,000+ learners already growing smarter with AIntelliLearn.</p>
+                <div style="display: flex; gap: 16px;">
+                    <a href="#" class="btn-primary" style="background: #fff; color: #000; padding: 14px 32px;">Start
+                        Free — Web App</a>
+                    <a href="#" class="btn-signin"
+                        style="color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-pill); padding: 14px 32px;">Download
+                        for iOS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <svg class="footer-logo-svg" viewBox="0 0 800 120">
+            <text x="50%" y="80%" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="700"
+                font-size="100">AINTELLILEARN</text>
+        </svg>
+    </div>
+
+    <footer class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#" class="logo" style="margin-bottom: 24px;">
+                    <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2C6.477,2,2,6.477,2,12s4.477,10,10,10s10-4.477,10-10S17.523,2,12,2z" />
+                    </svg>
+                    AIntelliLearn
+                </a>
+                <p style="color: var(--text-muted); font-size: 14px;">Learn without limits. The intelligent companion
+                    for your educational journey.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li>Features</li>
+                    <li>Pricing</li>
+                    <li>Changelog</li>
+                    <li>Beta Access</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li>About Us</li>
+                    <li>Use Cases</li>
+                    <li>Documentation</li>
+                    <li>Privacy Policy</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 AIntelliLearn Inc. · Made with ❤️ for learners</div>
+            <div style="display: flex; gap: 16px;">
+                <span>Privacy</span>
+                <span>Terms</span>
+                <span>Manage Cookies</span>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cookie-banner">
+        <p style="font-size: 14px;">We use cookies to improve your experience.</p>
+        <button class="btn-primary" id="accept-cookies">Accept All</button>
+        <button class="btn-signin" style="font-size: 14px;">Manage</button>
+    </div>
+
+    <script>
+        /* --- UTILS --- */
+        const $ = s => document.querySelector(s);
+        const $$ = s => document.querySelectorAll(s);
+
+        /* --- TYPING ENGINE --- */
+        function typeText(el, text, delay = 30) {
+            el.innerHTML = '';
+            const characters = text.split('').map(char => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                el.appendChild(span);
+                return span;
+            });
+
+            const cursor = document.createElement('div');
+            cursor.className = 'cursor';
+            el.appendChild(cursor);
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < characters.length) {
+                    characters[i].classList.add('visible');
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => cursor.remove(), 2000);
+                }
+            }, delay);
+        }
+
+        /* --- PARTICLES --- */
+        class ParticleSystem {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.count = options.count || 100;
+                this.colors = options.colors || ['#1a73e8', '#10b981', '#f59e0b', '#7c3aed'];
+                this.mouse = { x: null, y: null };
+                this.interactive = options.interactive || false;
+
+                this.init();
+                this.animate();
+
+                if (this.interactive) {
+                    window.addEventListener('mousemove', e => {
+                        this.mouse.x = e.x;
+                        this.mouse.y = e.y;
+                    });
+                }
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+
+                for (let i = 0; i < this.count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)]
+                    });
+                }
+            }
+
+            resize() {
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight;
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0) p.x = this.canvas.width;
+                    if (p.x > this.canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = this.canvas.height;
+                    if (p.y > this.canvas.height) p.y = 0;
+
+                    if (this.interactive && this.mouse.x) {
+                        const dx = p.x - this.mouse.x;
+                        const dy = p.y - this.mouse.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            p.x += dx / 20;
+                            p.y += dy / 20;
+                        }
+                    }
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = 0.5;
+                    this.ctx.fill();
+                });
+
+                // Lines
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const dx = this.particles[i].x - this.particles[j].x;
+                        const dy = this.particles[i].y - this.particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                            this.ctx.strokeStyle = this.particles[i].color;
+                            this.ctx.globalAlpha = (100 - dist) / 500;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        /* --- SLIDER --- */
+        let currentSlide = 0;
+        const slides = [
+            { copy: "Ace your exams with AI-powered study plans that adapt to your syllabus and test schedule.", link: "View student case →" },
+            { copy: "Upskill faster with targeted learning paths built around your career goals and existing expertise.", link: "View professional case →" },
+            { copy: "Stay curious forever. Let AIntelliLearn curate topics you love and connect ideas across disciplines.", link: "View learner case →" }
+        ];
+
+        function updateSlider() {
+            $('#slider-track').style.transform = `translateX(-${currentSlide * 85}%)`;
+            $('#prev-btn').disabled = currentSlide === 0;
+            $('#next-btn').disabled = currentSlide === slides.length - 1;
+
+            $('#slide-copy').style.opacity = 0;
+            setTimeout(() => {
+                $('#slide-copy').textContent = slides[currentSlide].copy;
+                $('#slide-link').textContent = slides[currentSlide].link;
+                $('#slide-copy').style.opacity = 1;
+            }, 300);
+        }
+
+        /* --- INIT --- */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Typing Hero
+            setTimeout(() => {
+                typeText($('#hero-title'), "Learn smarter. Grow faster.");
+                setTimeout(() => {
+                    $('#hero-sub').style.opacity = 1;
+                    $('#hero-sub').style.transform = 'translateY(0)';
+                    $('#hero-sub').style.transition = 'all 1s ease';
+                    setTimeout(() => {
+                        $('#hero-btns').style.opacity = 1;
+                        $('#hero-btns').style.transition = 'all 1s ease';
+                    }, 500);
+                }, 1000);
+            }, 500);
+
+            // Particles
+            new ParticleSystem('hero-canvas', { count: 120, interactive: true });
+            new ParticleSystem('canvas-left', { count: 30 });
+            new ParticleSystem('canvas-right', { count: 30, colors: ['#10b981', '#34d399'] });
+            new ParticleSystem('canvas-cta', { count: 80, colors: ['#4a9eff', '#50fa7b', '#bd93f9'] });
+
+            // Reveal Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+
+                        if (entry.target.id === 'demo-visual') {
+                            setTimeout(() => $('#demo-progress').style.width = '73%', 500);
+                        }
+
+                        if (entry.target.classList.contains('visual-1')) {
+                            setTimeout(() => $('#meter-fill').style.width = '85%', 800);
+                        }
+
+                        if (entry.target.classList.contains('visual-2')) {
+                            setTimeout(() => $('#forget-path').style.strokeDashoffset = '0', 500);
+                        }
+
+                        if (entry.target.id === 'mission-text') {
+                            typeText(entry.target, "AIntelliLearn is your AI-powered learning companion, evolving education into the adaptive, intelligent era.", 20);
+                        }
+
+                        if (entry.target.id === 'cta-title') {
+                            typeText(entry.target, "Start your learning liftoff with AIntelliLearn");
+                        }
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            $$('.reveal, .visual-1, .visual-2, .typing:not(#hero-title)').forEach(el => observer.observe(el));
+
+            // Floating Icons
+            const icons = ['🧠', '⚡', '🎯', '📈', '🔬', '📚', '🧬', '🤖', '🌍', '💎', '🔥', '💡', '🎨', '🚀'];
+            const iconRow = $('#icon-row');
+            for (let i = 0; i < 20; i++) {
+                const badge = document.createElement('div');
+                badge.className = 'icon-badge';
+                badge.style.animationDelay = `${i * 0.15}s`;
+                badge.innerHTML = `<span style="font-size: 32px;">${icons[i % icons.length]}</span>`;
+                iconRow.appendChild(badge);
+            }
+
+            // Custom Cursor
+            const cursor = $('#cursor');
+            window.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            $$('.demo-visual, .slide').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    const text = el.classList.contains('slide') ? '▶ View Story' : '▶ Play Demo';
+                    $('#cursor-text').textContent = text;
+                });
+                el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%, -50%) scale(0)');
+            });
+
+            // Slider Controls
+            $('#next-btn').onclick = () => { if (currentSlide < slides.length - 1) { currentSlide++; updateSlider(); } };
+            $('#prev-btn').onclick = () => { if (currentSlide > 0) { currentSlide--; updateSlider(); } };
+
+            // Header Scroll
+            window.onscroll = () => {
+                if (window.scrollY > 50) $('.header').classList.add('scrolled');
+                else $('.header').classList.remove('scrolled');
+            };
+
+            // Cookie Banner
+            if (!localStorage.getItem('cookiesAccepted')) {
+                setTimeout(() => $('#cookie-banner').classList.add('visible'), 2000);
+            }
+            $('#accept-cookies').onclick = () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                $('#cookie-banner').classList.remove('visible');
+            };
+        });
+    </script>
+</body>
+
+</html>

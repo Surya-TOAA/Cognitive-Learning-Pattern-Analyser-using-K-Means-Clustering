@@ -1,0 +1,11 @@
+from sklearn.cluster import KMeans
+import numpy as np
+import joblib
+
+# Fake training dataset (100 users x 5 features)
+X = np.load("fake_user_vectors.npy")
+
+kmeans = KMeans(n_clusters=4, random_state=42)
+kmeans.fit(X)
+
+joblib.dump(kmeans, "ml_models/kmeans_archetype.pkl")

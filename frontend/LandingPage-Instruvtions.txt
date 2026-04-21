@@ -1,0 +1,409 @@
+Build a stunning, production-quality single-page landing page for "AIntelliLearn" — 
+an AI-powered adaptive learning platform. Model the layout, interactions, and 
+aesthetic closely after Google Antigravity (antigravity.google). Deliver this as 
+a single self-contained HTML file with all CSS and JS inline.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESIGN SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aesthetic: Clean, modern, white-dominant with soft color accents.
+Inspired by: Google Antigravity — refined typography, generous whitespace, 
+elegant animations, frosted glass nav, full-bleed sections.
+
+Colors:
+  --bg:             #ffffff
+  --surface:        #f8f9fb
+  --text:           #202124
+  --text-muted:     #5f6368
+  --accent:         #1a73e8        (primary blue)
+  --accent-hover:   #185abc
+  --accent-green:   #10b981
+  --accent-purple:  #7c3aed
+  --accent-amber:   #f59e0b
+  --border:         rgba(0,0,0,0.08)
+  --overlay:        rgba(255,255,255,0.85)
+
+Typography:
+  - Import from Google Fonts: "Google Sans" (or "Plus Jakarta Sans" as fallback)
+    and "Google Sans Text" (or "DM Sans" as fallback) and "Google Sans Mono" 
+    (or "JetBrains Mono" as fallback)
+  - Headings: "Plus Jakarta Sans", bold/semibold, tight line-height (1.1)
+  - Body: "DM Sans", weight 400, line-height 1.6
+  - Code snippets: "JetBrains Mono"
+  - Hero h1: 5rem desktop, 3rem mobile
+  - Section h2: 2.5rem desktop, 1.8rem mobile
+
+Spacing system: 8px base. Use multiples: 8, 16, 24, 32, 48, 64, 96px.
+
+Border radius:
+  --radius-sm:  4px
+  --radius-md:  12px
+  --radius-lg:  24px
+  --radius-xl:  36px
+  --radius-pill: 9999px
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GLOBAL LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Max content width: 1280px, centered with auto margins.
+Page margin: clamp(24px, 5vw, 96px)
+12-column grid system for inner layouts.
+Sections are full-width with contained inner grids.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1 — FIXED HEADER / NAV
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: fixed top, full width, z-index: 100
+Background: rgba(255,255,255,0.85) with backdrop-filter: blur(10px)
+Transition: background smoothly to solid white on scroll (add .scrolled class 
+via JS IntersectionObserver or scroll event)
+Height: 64px
+Border-bottom: 1px solid rgba(0,0,0,0.06) when scrolled
+
+Left: Logo mark (an SVG brain/neural icon) + "AIntelliLearn" wordmark in bold.
+Center: Nav links — Features, Use Cases, Pricing, Blog, Resources
+  - Each link: 14px, weight 500, color: --text-muted
+  - Hover: color: --text, background: rgba(0,0,0,0.04), border-radius: --radius-sm
+  - "Use Cases" and "Resources" have dropdown arrows (▾) — build a hover 
+    dropdown with 3 sub-links each (no functionality needed, just structure)
+Right: 
+  - "Sign In" — ghost button style (text only)
+  - "Get Started Free" — primary button (#1a73e8, white text, pill shape, 
+    padding: 10px 24px)
+
+Mobile (<1024px): 
+  - Collapse nav to hamburger icon (☰)
+  - Clicking opens a full-screen overlay slide-in menu
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2 — HERO (full viewport height)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Layout: centered, flex column, min-height: 100svh
+Background: animated particle canvas covering full viewport (see PARTICLES below)
+
+Logo badge: Small "AIntelliLearn" logo above the heading, fades in first
+
+H1 headline — TYPED ANIMATION:
+  "Learn smarter. Grow faster."
+  Below it, a second line in muted/smaller text:
+  "The AI-powered learning platform that adapts to you."
+
+Implement a character-by-character typing animation:
+  - Split headline into individual <span> characters
+  - Each character fades in with opacity: 0 → 1 and translateY(8px → 0px)
+  - Stagger delay: 30ms per character
+  - After text finishes, show a blinking cursor (| blinks at 0.5s interval)
+  - Cursor appears at the end of the last typed character using absolute positioning
+
+Two CTA buttons below (appear after typing completes, fade in):
+  - Primary: "Start Learning Free" (blue, pill, with a ▶ play icon)
+  - Secondary: "Explore Features" (outlined, white bg, pill)
+  - Both buttons: min-height 48px, font-size 16px, gap: 12px between them
+
+Particle canvas:
+  - Use vanilla Three.js (r128) OR pure canvas 2D
+  - Generate 200 small dots (radius 1.5–3px) in accent colors 
+    (#1a73e8, #10b981, #f59e0b, #7c3aed) at random positions
+  - Each dot moves slowly in a random direction, wraps at canvas edges
+  - Lines connect dots within 120px distance (opacity proportional to distance)
+  - Canvas sits behind all content, full viewport, pointer-events: none
+  - On mouse move, nearby particles are gently pushed away (repel effect)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3 — PRODUCT VIDEO / DEMO PREVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Layout: full-width container, padding 64px vertical
+
+Left text block (40% width):
+  - Small eyebrow label: "See It In Action" (caption style, muted)
+  - H2: "Watch how AIntelliLearn adapts to your learning style"
+  - Body: "Our AI analyzes your pace, patterns, and preferences in real time 
+    to serve content exactly when and how you need it."
+
+Right visual block (60% width):
+  - A large rounded rectangle (border-radius: --radius-xl) 
+    filled with a gradient: from #1a73e8 to #7c3aed
+  - Inside, render a mock UI screenshot using pure HTML/CSS:
+    * Dark card with "Your Learning Session" header
+    * Animated progress bar filling to 73%
+    * Three topic pills: "Algebra ✓", "Physics →", "Chemistry ○"
+    * A fake AI chat bubble: "Great work! Try this harder problem next."
+  - On hover over the container, show a custom cursor pill 
+    ("▶ Play Demo") that follows mouse position (track with mousemove, 
+    transform: translate)
+  - A small play button circle (bottom-right) that appears on hover, 
+    fades out on hover (like Antigravity)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4 — FLOATING ICON ROW + MISSION STATEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(Directly mirrors the Antigravity "agent-first" bouncing icons section)
+
+Top row: A horizontal flex row of 18–22 circular icon badges (98px diameter each):
+  - Each badge: border: 1px solid rgba(0,0,0,0.1), border-radius: 50%, 
+    background: rgba(183,191,217,0.09)
+  - Each contains a relevant  SVG icon:
+  - Animate them with a sine wave bounce effect using CSS animation:
+    Each gets a different animation-delay so they form a wave
+    transform: translateY with keyframes: 0% translateY(0), 50% translateY(-35px), 100% translateY(0)
+    Duration: 3s, ease-in-out, infinite, different delays per icon (step 0.15s)
+
+Below the icon row, large heading (scroll into view triggers typing animation):
+  "AIntelliLearn is your AI-powered learning companion, evolving education 
+  into the adaptive, intelligent era."
+  - Font size: 2.5rem, font-weight: 500, max-width: 900px, centered
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5 — FEATURE EXPLORER (4 features)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(Mirrors Antigravity's feature list — text left + visual right, alternating)
+
+Each feature block:
+  - 2-column grid: 40% text | 60% visual
+  - Alternating layout: odd features text-left, even features text-right
+  - Large border-radius on the visual block (--radius-xl)
+  - Scroll-triggered fade-in (use IntersectionObserver on each feature block, 
+    add .visible class that transitions opacity + translateY)
+
+FEATURE 1 — "Adaptive Learning Engine"
+  Text: "Our AI tracks your cognitive patterns, adjusting difficulty, 
+  pacing, and content type in real time. No two learning journeys are alike."
+  Visual: A CSS/HTML mock showing a "Difficulty Meter" (animated fill bar), 
+  a topic card switching between Easy → Medium, and a brain icon pulsing.
+  Background gradient: #e8f0fe to #c5dbff
+
+FEATURE 2 — "Spaced Repetition System"
+  Text: "Evidence-based scheduling surfaces concepts at exactly the right 
+  moment before you forget them. Build lasting knowledge, not short-term recall."
+  Visual: An animated forgetting curve chart (pure CSS/SVG):
+    - Natural decay line (red, dashed, curves down)
+    - With-review line (blue, steps back up at review points)
+    - Review dot markers that pulse
+  Background gradient: #f0fdf4 to #bbf7d0
+
+FEATURE 3 — "Cognitive Style Detection"
+  Text: "Identify whether you're visual, analytical, kinesthetic, or auditory. 
+  AIntelliLearn serves content in your preferred format automatically."
+  Visual: An animated radar/spider chart (6 axes, SVG polygon morphing between 
+  two shapes on a loop) showing learning trait scores.
+  Background gradient: #faf5ff to #e9d5ff
+
+FEATURE 4 — "Multi-Agent Study Sessions"
+  Text: "Run parallel study sessions across multiple subjects, coordinated by 
+  your personal AI coach that monitors all of them simultaneously."
+  Visual: Three small "session cards" side-by-side, each with a subject name, 
+  a progress bar, and a colored status dot (active/paused/complete).
+  Has an "Explore Platform" button below the text.
+  Background gradient: #fff7ed to #fed7aa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6 — USE CASES SLIDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Header:
+  Left: H2 "Built for every kind of learner"
+  Right: Body paragraph "Whether you're a student, professional, or 
+  lifelong learner, AIntelliLearn meets you where you are."
+
+Below: A horizontal image slider (3 slides):
+  - Each slide: large image placeholder (use CSS gradient backgrounds with 
+    overlaid white text heading)
+  - Slide 1: "Student" — gradient #1a73e8 → #0d47a1, text overlay "Student"
+  - Slide 2: "Professional" — gradient #10b981 → #065f46, overlay "Professional"
+  - Slide 3: "Lifelong Learner" — gradient #7c3aed → #4c1d95, overlay "Lifelong Learner"
+  - Each slide has a ▶ play button circle bottom-right (just decorative)
+  - A custom cursor pill "▶ View Story" follows mouse when hovering on a slide
+
+Below slider: Description text block for each active slide (fades between):
+  - Slide 1 copy: "Ace your exams with AI-powered study plans that adapt 
+    to your syllabus and test schedule."
+    Link: "View student case →"
+  - Slide 2 copy: "Upskill faster with targeted learning paths built around 
+    your career goals and existing expertise."
+    Link: "View professional case →"
+  - Slide 3 copy: "Stay curious forever. Let AIntelliLearn curate topics 
+    you love and connect ideas across disciplines."
+    Link: "View learner case →"
+
+Left/Right arrow controls (same pill-shaped button pair as Antigravity):
+  - Border-radius: 999px, background: rgba(0,0,0,0.06)
+  - ← and → arrows, disabled state when at first/last slide
+  - Clicking advances/retreats the slider (smooth translateX transition)
+  - Auto-advance every 5 seconds
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 7 — PRICING / TRY SOLUTIONS (split section)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Full-width section, divided into two equal halves side by side.
+Border-top: 1px solid --border
+
+LEFT HALF — "For Students"
+  Background: white with an animated particle effect (smaller, slower than hero)
+  Badge label: "Free Forever" (small pill, frosted glass)
+  H3: "For Students"
+  Subhead: "Start your journey" (muted color)
+  CTA button: "Get Started Free" (primary blue)
+  On hover: subtle backdrop glow (radial gradient with blue at 20% opacity)
+
+RIGHT HALF — "For Teams & Schools"
+  Background: white with different particle color palette
+  Badge label: "Coming Soon"
+  H3: "For Organizations"  
+  Subhead: "Level up your team"
+  CTA button: "Notify Me" (secondary/outline style)
+  On hover: subtle green glow
+
+Particles: generate 50 small colored dots per half using canvas, each using 
+the brand colors of that half. Gentle floating motion, no connections needed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 8 — LATEST BLOG POSTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Border-top: 1px solid --border
+Padding: 72px 0
+
+Header row:
+  Left: H2 "Latest From Our Blog"
+  Right: "View all posts →" secondary button
+
+Horizontal scrollable card row (4 cards, draggable):
+  Each card:
+    - Square image area (aspect-ratio: 1/1): filled with unique CSS gradient
+    - Below image: tag chip (e.g. "Learning Science"), date, title, "Read post →" link
+    - Card hover: subtle lift (translateY(-4px), box-shadow increase)
+    - Vertical divider between cards (pseudo-element)
+
+Cards:
+  1. "How Spaced Repetition Changed My GRE Prep" — Jan 12, 2026
+  2. "The Science Behind Adaptive Learning AI" — Feb 3, 2026
+  3. "5 Cognitive Biases That Hurt Your Studies" — Feb 15, 2026
+  4. "Introducing AIntelliLearn 2.0" — Feb 27, 2026
+
+Left/Right arrow slider controls (same as use cases section).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 9 — DOWNLOAD / GET STARTED CTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(Mirrors the Antigravity download section — dark, full bleed)
+
+A large rounded rectangle (margin: 0 page-margin, border-radius: --radius-xl)
+Background: #121317 (near-black)
+Overlaid with a particle canvas (same as hero but on dark background, 
+using lighter/glowing dot colors: #4a9eff, #50fa7b, #bd93f9)
+Padding: 280px 0 (desktop), 180px 0 (mobile)
+
+Content (left-aligned within the dark block):
+  H2 (white, max-width 550px): typing animation triggered when scrolled into view:
+  "Start your learning liftoff with AIntelliLearn"
+  
+  Subtitle (muted white, #aaaaaa): "Join 50,000+ learners already growing smarter."
+  
+  Two buttons:
+    - "Start Free — Web App" (white background, dark text, pill) 
+    - "Download for iOS" (transparent + white border, white text, pill)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 10 — LARGE WORDMARK FOOTER GRAPHIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(Mirrors the large SVG "ANTIGRAVITY" text in the footer)
+
+Render "AINTELLILEARN" as a large full-width SVG wordmark:
+  - Each letter rendered as an SVG path using a thick, geometric sans-serif style
+  - Fill: #121317
+  - Width: 100% of container, viewBox scales responsively
+  - Subtle entrance animation: letters slide up from below on scroll
+
+Below that: standard footer grid with 3 columns:
+  - Col 1: Logo + tagline "Learn without limits."
+  - Col 2: Links — Platform, Features, Pricing, Blog, Changelog
+  - Col 3: Links — About, Use Cases, Documentation, Support, Press
+
+Footer bottom bar:
+  Left: Google-style logo link + "Made with ❤️ for learners"
+  Right: Privacy · Terms · Manage Cookies
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANIMATIONS & INTERACTIONS (CRITICAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. SCROLL-TRIGGERED REVEALS:
+   Use IntersectionObserver on every section/feature.
+   When element enters viewport (threshold: 0.15):
+   - Add class .visible
+   - CSS: .visible { opacity: 1; transform: translateY(0); }
+   - Default state: opacity: 0; transform: translateY(40px); transition: all 0.6s ease;
+   - Stagger children using animation-delay: 0.1s, 0.2s, 0.3s...
+
+2. TYPING ANIMATION:
+   - Split text into characters with a JS function
+   - Each char wrapped in a span: opacity 0, translateY 8px
+   - Animate in sequence with 30ms delay per character
+   - Show blinking cursor during animation, hide after
+   - Trigger on page load for hero; trigger on IntersectionObserver for sections
+
+3. PARTICLE CANVAS:
+   - Hero canvas: 200 particles, interactive repel on mouse
+   - Section 7 halves: 50 particles each, no interaction
+   - CTA section: 120 particles, static color palette
+   - Use requestAnimationFrame loop
+
+4. CUSTOM CURSOR on sliders:
+   - Show a pill-shaped div ("▶ View Story") on mouseover of slider
+   - Track mousemove and update transform: translate(x, y) with CSS transition
+   - Scale from 0 on enter, scale to 0 on leave
+
+5. SLIDER DRAG:
+   - Use mousedown/mousemove/mouseup + touchstart/touchmove/touchend
+   - Detect swipe direction, advance slide by 1
+   - Snap to nearest slide on release
+
+6. HEADER BEHAVIOR:
+   - Transparent on hero, frosted glass after scrolling 50px
+   - Hide header on scroll down (add .hidden class: translateY(-100%))
+   - Show header on scroll up (remove .hidden)
+
+7. FEATURE BLOCK VISUAL ANIMATIONS:
+   - Forgetting curve: SVG path draws itself with stroke-dasharray + dashoffset
+   - Radar chart: SVG polygon points morph between two sets of values (lerp in JS loop)
+   - Progress bars: width animates from 0 to value when section enters viewport
+   - Session cards: pulse animation on status dot
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RESPONSIVE BREAKPOINTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Desktop: >1024px — full layout as described
+Tablet: 768–1024px:
+  - Feature sections stack vertically (visual below text)
+  - Slider controls move to below slider
+  - Pricing halves stack vertically
+  - Bouncing icon count reduces to 12
+Mobile: <768px:
+  - Nav collapses to hamburger
+  - Hero h1 becomes 2.8rem
+  - All 2-col layouts go single column
+  - Pricing section: full width stacked
+  - Footer nav stacks and has border-top separating sections
+  - Bottom navigation links stack vertically
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COOKIE BANNER (bottom)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Fixed bottom bar (same as Google):
+  - White background, box-shadow
+  - Text: "We use cookies to improve your experience."
+  - Two buttons: "Accept All" (blue filled) | "Manage Preferences" (outline)
+  - Dismiss button (×) top right
+  - Hidden via localStorage check: if 'cookiesAccepted' is set, don't show
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Single .html file, all CSS in <style>, all JS in <script>
+- No external libraries except Google Fonts (preconnect + stylesheet link)
+- Fully functional with zero console errors
+- All animations smooth at 60fps
+- Passes basic accessibility: semantic HTML, aria-labels on buttons and nav,
+  skip-to-content link, color contrast AA minimum
+- Meta tags: title, description, og:title, og:description, viewport
+- Favicon: use a simple brain emoji as SVG favicon inline
+
+Do NOT use placeholder gray boxes for images — use CSS gradients and HTML/CSS 
+mock UIs instead. Every visual element must look intentional and designed.
